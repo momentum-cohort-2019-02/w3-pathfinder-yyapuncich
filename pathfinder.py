@@ -48,10 +48,15 @@ class MapImage:
         self.my_map = my_map
         # had to add len() to list info here so it would return a number for creating size on new image.
         self.im = Image.new('RGBA', (len(self.my_map.elevations[0]), len(self.my_map.elevations)))
+        # self.new_image = draw_map()
 
     def draw_map(self):
         """For elevations listed in elevation list use the color value to draw the map."""
-
+        # What is Numpy? Saw it in my searches about putpixel...
+        for y in range(len(self.my_map.elevations)):
+            self.im.putpixel((x,y), (self.my_map.color_value(x,y)))
+            self.im.save('my_map.png')
+        
 
 
 class Pathfinder:
@@ -64,4 +69,5 @@ if __name__ == "__main__":
 # instantiate (def: represent as or by an instance)
     my_map = MapInfo('elevation_small.txt')
     drawing = MapImage(my_map)
+    drawing.draw_map()
     print(my_map.max_elevation, my_map.min_elevation)
