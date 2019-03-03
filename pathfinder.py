@@ -46,7 +46,7 @@ class MapImage:
         """Assigns color value to coordinate based on current elevation"""
         # Not sure I'm putting the color_number in the right spot right now... we'll see what colors come out. Maybe move this to MapImage class
         # current_elevation = 0
-        return int((self.get_current_elevation(x, y)) - (self.my_map.min_elevation) / (self.my_map.max_elevation - self.my_map.min_elevation) * 255)
+        return int((self.get_current_elevation(x, y) - self.my_map.min_elevation) / (self.my_map.max_elevation - self.my_map.min_elevation) * 255)
 
     def draw_map(self):
         """For elevations listed in elevation list use the color value to draw the map."""
