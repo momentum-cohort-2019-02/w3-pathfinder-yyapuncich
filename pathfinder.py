@@ -44,8 +44,6 @@ class MapImage:
 
     def get_color_value(self, x, y):
         """Assigns color value to coordinate based on current elevation"""
-        # Not sure I'm putting the color_number in the right spot right now... we'll see what colors come out. Maybe move this to MapImage class
-        # current_elevation = 0
         return int((self.get_current_elevation(x, y) - self.my_map.min_elevation) / (self.my_map.max_elevation - self.my_map.min_elevation) * 255)
 
     def draw_map(self):
@@ -60,8 +58,24 @@ class MapImage:
 
 class Pathfinder:
     """
-    Draws a path from the westernmost axis on the map to a destination on the easternmost axis. Looks for next step by searching for elevation value closest to current elevation value, with 3 Elevations, always moving east.
+    Draws a path from a westernmost axis on the map to a destination on the easternmost axis. Looks for next step by searching for elevation value closest to current elevation value, with 3 Elevations, always moving east.
     """
+    def __init__(self, my_map):
+        self.path_it_out = path_it_out
+        self.my_map = my_map
+
+    def get_potential_steps(self, cur_x, cur_y):
+        """Creates list of potential next steps based on current location. Also creates diff_list that will be used to find min difference for next step"""
+        cur_x = 7
+        cur_y = 0
+        while cur_x < len(self.my_map.elevations):
+            potential_ys = [cur_y]
+            if cur_y - 1 >= 0:
+                potential_ys.append(cur_y - 1)
+            if cur_y + 1 < len(self.my_map.elevations):
+                potential_ys.append(cur_y + 1)
+        # diff_list get's list of difference in elevation values from (next column potenial steps) - (current column location/elevation)  
+        self.diff_list = [abs(self.my_map.elevations[pot_y][cur_x + 1] - self.my_map.elevations[cur_y][cur_x]) for pot_y in potential_ys]
 
 if __name__ == "__main__":
 
@@ -70,4 +84,5 @@ if __name__ == "__main__":
     my_map = MapInfo('elevation_small.txt')
     drawing = MapImage(my_map)
     drawing.draw_map()
+    path_it_out = Pathfinder(my_map)
     print(my_map.max_elevation, my_map.min_elevation)
