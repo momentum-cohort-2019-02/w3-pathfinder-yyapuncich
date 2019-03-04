@@ -61,22 +61,32 @@ class Pathfinder:
     Draws a path from a westernmost axis on the map to a destination on the easternmost axis. Looks for next step by searching for elevation value closest to current elevation value, with 3 Elevations, always moving east.
     """
     def __init__(self, my_map):
-        self.path_it_out = path_it_out
+        # self.path_it_out = path_it_out
         self.my_map = my_map
 
-    def get_potential_steps(self, cur_x, cur_y):
+    def get_potential_steps(self):
         """Creates list of potential next steps based on current location. Also creates diff_list that will be used to find min difference for next step"""
-        cur_x = 7
-        cur_y = 0
-        while cur_x < len(self.my_map.elevations):
+        cur_x = 0
+        cur_y = 7
+        # for cur_y in len(self.my_map.elevations[0]):
+        while cur_x < len(self.my_map.elevations[0]) - 1:
             potential_ys = [cur_y]
             if cur_y - 1 >= 0:
                 potential_ys.append(cur_y - 1)
             if cur_y + 1 < len(self.my_map.elevations):
                 potential_ys.append(cur_y + 1)
         # diff_list get's list of difference in elevation values from (next column potenial steps) - (current column location/elevation)  
-        self.diff_list = [abs(self.my_map.elevations[pot_y][cur_x + 1] - self.my_map.elevations[cur_y][cur_x]) for pot_y in potential_ys]
+            self.diff_list = [abs(self.my_map.elevations[pot_y][cur_x + 1] - self.my_map.elevations[cur_y][cur_x]) for pot_y in potential_ys]
 
+            min_diff = min(self.diff_list)
+            min_diff_index = self.diff_list.index(min_diff)
+            next_y = potential_ys[min_diff_index]
+
+            cur_x += 1
+            cur_y = next_y
+
+            # print("cur_x", cur_x)
+            # print("cur_y", cur_y)
 if __name__ == "__main__":
 
 # instantiate (def: represent as or by an instance)
@@ -85,4 +95,6 @@ if __name__ == "__main__":
     drawing = MapImage(my_map)
     drawing.draw_map()
     path_it_out = Pathfinder(my_map)
+    path_it_out.get_potential_steps()
+    
     print(my_map.max_elevation, my_map.min_elevation)
