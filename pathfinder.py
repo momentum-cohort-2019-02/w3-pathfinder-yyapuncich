@@ -60,14 +60,15 @@ class Pathfinder:
     """
     Draws a path from a westernmost axis on the map to a destination on the easternmost axis. Looks for next step by searching for elevation value closest to current elevation value, with 3 Elevations, always moving east.
     """
-    def __init__(self, my_map):
+    def __init__(self, my_map, filename):
         # self.path_it_out = path_it_out
         self.my_map = my_map
+        self.draw_line = Image.open(filename)
 
-    def get_potential_steps(self):
+    def get_route(self):
         """Creates list of potential next steps based on current location. Also creates diff_list that will be used to find min difference for next step"""
         cur_x = 0
-        cur_y = 7
+        cur_y = 150
         # for cur_y in len(self.my_map.elevations[0]):
         while cur_x < len(self.my_map.elevations[0]) - 1:
             potential_ys = [cur_y]
@@ -81,10 +82,13 @@ class Pathfinder:
             min_diff = min(self.diff_list)
             min_diff_index = self.diff_list.index(min_diff)
             next_y = potential_ys[min_diff_index]
+            #create my list of coordinates for the path 
+            line_creator = ImageDraw.Draw(self.draw_line)
+            line_creator.point((cur_x, cur_y), (240, 255, 140))
 
             cur_x += 1
             cur_y = next_y
-
+        return self.draw_line.save('drawn_line.png')
             # print("cur_x", cur_x)
             # print("cur_y", cur_y)
 if __name__ == "__main__":
@@ -94,7 +98,6 @@ if __name__ == "__main__":
     my_map = MapInfo('elevation_small.txt')
     drawing = MapImage(my_map)
     drawing.draw_map()
-    path_it_out = Pathfinder(my_map)
-    path_it_out.get_potential_steps()
-    
+    path_it_out = Pathfinder(my_map, 'new_map.png')
+    path_it_out.get_route()
     print(my_map.max_elevation, my_map.min_elevation)
